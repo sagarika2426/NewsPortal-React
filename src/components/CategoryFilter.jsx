@@ -1,7 +1,7 @@
 
 const CategoryFilter = ({ categories, selectedCategory, onSelectCategory }) => {
   return (
-    <div className="flex justify-center space-x-1 lg:space-x-4 mb-4 flex-wrap gap-2">
+    <div className="flex justify-center space-x-1 lg:space-x-4 mb-4 flex-wrap text-sm lg:text-md gap-2 lg:gap-0">
       {categories.map((category, index) => (
         <button
           key={index}
