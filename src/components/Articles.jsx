@@ -1,22 +1,18 @@
-import { CircularProgress } from "@mui/material";
-import axios from "axios";
-import { useEffect } from "react";
-import PaginationBar from "./Pagination";
-import data from "/src/Data.json"
-
+import { useEffect } from 'react';
+import { CircularProgress } from '@mui/material';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   setArticles,
   setCurrentPage,
-  setError,
   setLoading,
   setSelectedCategory,
-} from "../store/articlesSlice";
-import { useDispatch, useSelector } from "react-redux";
-import CategoryFilter from "./CategoryFilter";
+} from '../store/articlesSlice';
+import PaginationBar from './Pagination';
+import CategoryFilter from './CategoryFilter';
+import data from '/src/Data.json';
+import { Link } from 'react-router-dom';
 
 const Articles = () => {
-
-  
   const dispatch = useDispatch();
   const {
     articles,
@@ -24,72 +20,57 @@ const Articles = () => {
     articlesPerPage,
     selectedCategory,
     loading,
-  } = useSelector((state) => state.articles);
+    searchQuery,
+  } = useSelector(state => state.articles);
 
   const categoriesArray = [
-    "Business",
-    "Entertainment",
-    "General",
-    "Health",
-    "Science",
-    "Technology",
+    'Business',
+    'Entertainment',
+    'General',
+    'Health',
+    'Science',
+    'Technology',
+    'Sports'
   ];
 
-  // useEffect(() => {
-  //   const fetchArticles = async () => {
-  //     dispatch(setLoading(true)); // Dispatch loading state true before fetching
-  //     try {
-  //       const API_KEY = import.meta.env.VITE_NEWS_API_KEY;
-  //       let url = `https://newsapi.org/v2/top-headlines?country=us&apiKey=${API_KEY}`;
-  //       if (selectedCategory) {
-  //         url += `&category=${selectedCategory.toLowerCase()}`;
-  //       }
-  //       const response = await axios.get(url);
-  //       const fetchedArticles = response.data.articles.filter(
-  //         (article) => article.urlToImage
-  //       );
-  //       dispatch(setArticles(fetchedArticles.slice(0,1)));
-  //     } catch (error) {
-  //       console.error("Error fetching articles:", error);
-  //       dispatch(setError(error.message));
-  //     } finally {
-  //       dispatch(setLoading(false)); // Dispatch loading state false after fetching
-  //     }
-  //   };
-  //   fetchArticles();
-  // }, [dispatch, selectedCategory]);
-
-
   useEffect(() => {
-    dispatch(setLoading(true)); // Dispatch loading state true before fetching
+    dispatch(setLoading(true));
     setTimeout(() => {
-      dispatch(setArticles(data.articles.slice(0, 10))); // Use only a portion for initial display
+      dispatch(setArticles(data.articles.slice(0, 10))); 
       dispatch(setLoading(false));
-    }, 1000);
+    }, 1000); 
   }, [dispatch]);
 
-  const shortDescription = (description) => {
-    if (!description) return "";
-    const words = description.split(" ");
-    return words.length > 10
-      ? `${words.slice(0, 10).join(" ")}...`
-      : description;
+  // Function to to short the description
+  const shortDescription = description => {
+    if (!description) return '';
+    const words = description.split(' ');
+    return words.length > 10 ? `${words.slice(0, 10).join(' ')}...` : description;
   };
 
+  // Function to handle pagination page change
   const handlePageChange = (event, value) => {
     dispatch(setCurrentPage(value));
   };
 
   const indexOfLastArticle = currentPage * articlesPerPage;
   const indexOfFirstArticle = indexOfLastArticle - articlesPerPage;
-  const currentArticles = articles.slice(
+
+  // Filter articles based on searchQuery
+  const filteredArticles = articles.filter(article =>
+    article.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  // Slice filtered articles for current page
+  const currentArticles = filteredArticles.slice(
     indexOfFirstArticle,
     indexOfLastArticle
   );
 
-  const handleCategoryClick = (category) => {
+  // Function to handle category filter click
+  const handleCategoryClick = category => {
     dispatch(setSelectedCategory(category.toLowerCase()));
-    dispatch(setCurrentPage(1));
+    dispatch(setCurrentPage(1)); // Reset current page to 1 when category changes
   };
 
   return (
@@ -105,21 +86,29 @@ const Articles = () => {
         selectedCategory={selectedCategory}
         onSelectCategory={handleCategoryClick}
       />
+
       {/* Articles Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 lg:gap-8 mx-4">
         {loading ? (
-          <div className="flex items-center justify-center col-span-3">
+          // Display loading while fetching data
+          <div className="flex items-center justify-center col-span-4">
             <CircularProgress color="primary" />
+          </div>
+        ) : currentArticles.length === 0 ? (
+          <div className="col-span-4 text-center text-gray-600 py-8">
+            No articles found.
           </div>
         ) : (
           currentArticles.map((article, index) => (
+            <Link key={index} to={`/article/${article.title}`}>
+
             <div
               key={index}
-              className="rounded-lg overflow-hidden shadow-lg bg-white my-3"
+              className="rounded-lg overflow-hidden shadow-lg bg-white my-3 transition-all duration-300 hover:shadow-2xl"
             >
               <img
-                className="w-full h-48 object-cover"
-                src={article.urlToImage}
+                  className="w-full h-48 object-cover transform transition-transform duration-300 hover:scale-105"
+                  src={article.urlToImage}
                 alt={article.title}
               />
               <div className="p-4">
@@ -130,7 +119,7 @@ const Articles = () => {
                   {shortDescription(article.description)}
                 </p>
                 <p className="text-gray-500 font-semibold mb-2">
-                  By {article.author || "Unknown"}
+                  By {article.author || 'Unknown'}
                 </p>
                 <a
                   href={article.url}
@@ -142,6 +131,7 @@ const Articles = () => {
                 </a>
               </div>
             </div>
+            </Link>
           ))
         )}
       </div>

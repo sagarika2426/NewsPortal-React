@@ -7,6 +7,7 @@ const initialState = {
     selectedCategory: "",
     loading: false,
     error: null,
+    searchQuery: "",
 }
 
 const articlesSlice = createSlice({
@@ -25,11 +26,15 @@ const articlesSlice = createSlice({
 
         },
         setLoading: (state, action) => {
-            state.payload = action.payload
+            state.loading = action.payload
         },
         setError: (state, action) => {
             state.error = action.payload;
-          },
+        },
+        setSearchQuery: (state, action) => {
+            state.searchQuery = action.payload;
+        }
+        
     }
 
 })
@@ -39,7 +44,8 @@ export const {
     setSelectedCategory,
     setCurrentPage,
     setLoading,
-    setError
+    setError,
+    setSearchQuery
 } = articlesSlice.actions;
 
 export default articlesSlice.reducer;
