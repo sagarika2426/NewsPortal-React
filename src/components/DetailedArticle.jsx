@@ -40,11 +40,11 @@ const DetailedArticle = () => {
     }
 
     return (
-        <div className="container mx-auto py-8">
+        <div className="container mx-auto lg:py-8 py-2">
             <div className="lg:max-w-8xl mx-auto flex bg-white shadow-md rounded-lg overflow-hidden flex-col lg:flex-row">
                 {/* Content Section */}
                 <div className="lg:w-1/2 lg:p-6 p-2">
-                    <h1 className="lg:text-3xl text-xl font-bold text-gray-800 mb-4">{article.title}</h1>
+                    <h1 className="lg:text-3xl text-2xl font-bold text-gray-800 mb-4">{article.title}</h1>
                     <p className="text-sm text-gray-700 mb-4">{article.description}</p>
                     <div className="flex justify-between mb-4 flex-col">
                         <p className="text-gray-500">{new Date(article.publishedAt).toLocaleDateString()}</p>
