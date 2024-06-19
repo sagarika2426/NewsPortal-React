@@ -123,7 +123,7 @@ const Articles = () => {
                 alt={article.title}
               />
               <div className="p-4">
-                <h2 className="text-lg font-semibold text-gray-800 mb-2">
+                <h2 className="text-md font-semibold text-gray-800 mb-2">
                   {article.title}
                 </h2>
                 <p className="text-sm text-gray-700 mb-4">
