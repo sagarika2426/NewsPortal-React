@@ -6,7 +6,7 @@ const NavBar = () => {
   // const categories = ['Home', 'Technology', 'Health', 'Sports', 'Entertainment', 'Business'];
 
   return (
-    <nav className="bg-blue-600 px-3 lg:py-6 py-4 sticky top-0 z-10 lg:px-6">
+    <nav className="bg-sky-600 px-3 lg:py-6 py-4 sticky top-0 z-10 lg:px-6">
       <div className="flex justify-between flex-col lg:flex-row gap-3">
         <div className=" lg:text-2xl text-xl font-bold flex gap-2">
           <p className="text-yellow-400">News </p>
