@@ -121,14 +121,11 @@ const Articles = () => {
                 <p className="text-gray-500 font-semibold mb-2">
                   By {article.author || 'Unknown'}
                 </p>
-                <a
-                  href={article.url}
-                  className="text-blue-500 font-semibold hover:underline"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+                <Link key={index} to={`/article/${article.title}`}
+                className='text-blue-700 font-semibold'>
+
                   Read More
-                </a>
+                </Link>
               </div>
             </div>
             </Link>
