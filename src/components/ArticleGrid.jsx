@@ -26,26 +26,26 @@ const ArticleGrid = ({
   const handleAddToFav = (article) => {
     if (!isArticleInFavorites(article)) {
       dispatch(addToFavorites(article));
-      toast.success('Article added to favorites!', {
-        position: 'top-right',
+      toast.success("Article added to favorites!", {
+        position: "top-right",
         autoClose: 4000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        style: { fontSize: '14px' },
+        style: { fontSize: "14px" },
       });
     } else {
-      toast.warning('Article is already in favorites!', {
-        position: 'top-right',
+      toast.warning("Article is already in favorites!", {
+        position: "top-right",
         autoClose: 3000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        style: { fontSize: '14px' },
+        style: { fontSize: "14px" },
       });
     }
   };
@@ -53,15 +53,15 @@ const ArticleGrid = ({
   // Function to handle removing from favorites
   const handleRemoveFromFav = (article) => {
     dispatch(removeFromFavorites(article.title));
-    toast.success('Article removed from favorites!', {
-      position: 'top-right',
+    toast.success("Article removed from favorites!", {
+      position: "top-right",
       autoClose: 4000,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
       draggable: true,
       progress: undefined,
-      style: { fontSize: '14px' },
+      style: { fontSize: "14px" },
     });
   };
 
@@ -81,7 +81,14 @@ const ArticleGrid = ({
             key={index}
             className="rounded-lg overflow-hidden shadow-lg bg-white my-3 transition-all duration-300 hover:shadow-2xl"
           >
-            <Link to={`/article/${article.title}`}>
+            <Link
+              to={
+                isFavoritePage
+                  ? `/favorites/${(article.title)}`
+                  : `/article/${encodeURIComponent(article.title)}`
+              }
+            >
+              {" "}
               <div>
                 <img
                   className="w-full h-48 object-cover transform transition-transform duration-300 hover:scale-105"
@@ -104,7 +111,11 @@ const ArticleGrid = ({
 
             <div className="flex justify-between items-center p-4">
               <Link
-                to={`/article/${article.title}`}
+                to={
+                  isFavoritePage
+                    ? `/favorites/${encodeURIComponent(article.title)}`
+                    : `/article/${encodeURIComponent(article.title)}`
+                }
                 className="text-blue-700 font-semibold"
               >
                 Read More
@@ -112,17 +123,17 @@ const ArticleGrid = ({
 
               {isFavoritePage ? (
                 // If it's the Favorites page, show remove button
-                <button onClick={() => handleRemoveFromFav(article)}
-                className="bg-red-600 text-white px-4 py-1 rounded-md hover:bg-red-700">
-                Remove
-              </button>
+                <button
+                  onClick={() => handleRemoveFromFav(article)}
+                  className="bg-red-600 text-white px-4 py-1 rounded-md hover:bg-red-700"
+                >
+                  Remove
+                </button>
               ) : (
                 // Otherwise, show add to favorites button if not already in favorites
-                <IconButton
-                  onClick={() => handleAddToFav(article)}
-                >
+                <IconButton onClick={() => handleAddToFav(article)}>
                   {isArticleInFavorites(article) ? (
-                    <FavoriteIcon style={{color: 'red'}} />
+                    <FavoriteIcon style={{ color: "red" }} />
                   ) : (
                     <FavoriteBorderIcon />
                   )}

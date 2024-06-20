@@ -29,13 +29,13 @@ const Favorites = () => {
       </h1>
 
       <ArticleGrid
-        loading={false} // Assuming data is already loaded from Redux state
+        loading={false} 
         currentArticles={favorites}
         removeFromFavorites={handleRemoveFromFavorites}
         shortDescription={(description) =>
-          description.slice(0, 100) + "..." // Example shortDescription function
+          description.slice(0, 50) + "..."
         }
-        isFavoritePage={true} // Flag to indicate it's the Favorites page
+        isFavoritePage={true}
       />
         <ToastContainer
         position="top-right"

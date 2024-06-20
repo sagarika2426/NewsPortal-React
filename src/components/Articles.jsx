@@ -57,7 +57,7 @@ const Articles = () => {
         const fetchedArticles = response.data.articles.filter(
           (article) => article.urlToImage
         );
-        dispatch(setArticles(fetchedArticles.slice(0,1)));
+        dispatch(setArticles(fetchedArticles.slice(0,0)));
       } catch (error) {
         console.error("Error fetching articles:", error);
         dispatch(setError(error.message));
