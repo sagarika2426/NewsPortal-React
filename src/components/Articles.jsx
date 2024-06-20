@@ -1,16 +1,18 @@
-import { useEffect } from 'react';
-import { CircularProgress } from '@mui/material';
-import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from "react";
+import axios from 'axios';
+import { useDispatch, useSelector } from "react-redux";
 import {
   setArticles,
   setCurrentPage,
+  setError,
   setLoading,
   setSelectedCategory,
-} from '../store/articlesSlice';
-import PaginationBar from './Pagination';
-import CategoryFilter from './CategoryFilter';
-import data from '/src/Data.json';
-import { Link } from 'react-router-dom';
+} from "../store/articlesSlice";
+import PaginationBar from "./Pagination";
+import CategoryFilter from "./CategoryFilter";
+import { ToastContainer, toast } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
+import ArticleGrid from "./ArticleGrid";
 
 const Articles = () => {
   const dispatch = useDispatch();
@@ -21,31 +23,58 @@ const Articles = () => {
     selectedCategory,
     loading,
     searchQuery,
-  } = useSelector(state => state.articles);
+    error
+  } = useSelector((state) => state.articles);
 
   const categoriesArray = [
-    'Business',
-    'Entertainment',
-    'General',
-    'Health',
-    'Science',
-    'Technology',
-    'Sports'
+    "Business",
+    "Entertainment",
+    "General",
+    "Health",
+    "Science",
+    "Technology",
+    "Sports",
   ];
 
+  // useEffect(() => {
+  //   dispatch(setLoading(true));
+  //   setTimeout(() => {
+  //     dispatch(setArticles(data.articles.slice(0, 10)));
+  //     dispatch(setLoading(false));
+  //   }, 1000);
+  // }, [dispatch]);
+
   useEffect(() => {
-    dispatch(setLoading(true));
-    setTimeout(() => {
-      dispatch(setArticles(data.articles.slice(0, 10))); 
-      dispatch(setLoading(false));
-    }, 1000); 
-  }, [dispatch]);
+    const fetchArticles = async () => {
+      dispatch(setLoading(true));
+      try {
+        const API_KEY = import.meta.env.VITE_NEWS_API_KEY;
+        let url = `https://newsapi.org/v2/top-headlines?country=in&apiKey=${API_KEY}`;
+        if (selectedCategory) {
+          url += `&category=${selectedCategory.toLowerCase()}`;
+        }
+        const response = await axios.get(url);
+        const fetchedArticles = response.data.articles.filter(
+          (article) => article.urlToImage
+        );
+        dispatch(setArticles(fetchedArticles.slice(0,1)));
+      } catch (error) {
+        console.error("Error fetching articles:", error);
+        dispatch(setError(error.message));
+      } finally {
+        dispatch(setLoading(false)); 
+      }
+    };
+    fetchArticles();
+  }, [dispatch, selectedCategory]);
 
   // Function to to short the description
-  const shortDescription = description => {
-    if (!description) return '';
-    const words = description.split(' ');
-    return words.length > 10 ? `${words.slice(0, 10).join(' ')}...` : description;
+  const shortDescription = (description) => {
+    if (!description) return "";
+    const words = description.split(" ");
+    return words.length > 10
+      ? `${words.slice(0, 10).join(" ")}...`
+      : description;
   };
 
   // Function to handle pagination page change
@@ -53,11 +82,12 @@ const Articles = () => {
     dispatch(setCurrentPage(value));
   };
 
+  // Calculate index of first and last article for pagination
   const indexOfLastArticle = currentPage * articlesPerPage;
   const indexOfFirstArticle = indexOfLastArticle - articlesPerPage;
 
-  // Filter articles based on searchQuery
-  const filteredArticles = articles.filter(article =>
+  // Filter articles based on search query
+  const filteredArticles = articles.filter((article) =>
     article.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
@@ -68,75 +98,94 @@ const Articles = () => {
   );
 
   // Function to handle category filter click
-  const handleCategoryClick = category => {
+  const handleCategoryClick = (category) => {
     dispatch(setSelectedCategory(category.toLowerCase()));
-    dispatch(setCurrentPage(1)); // Reset current page to 1 when category changes
+    dispatch(setCurrentPage(1));
+  };
+
+  const handleAddToFav = (article) => {
+    let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+    const exists = favorites.some((favArticle) => favArticle.title === article.title);
+    if (exists) {
+      toast.warning("Article is already in favorites!", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        style: { fontSize: "14px" }
+      });
+    } else {
+      favorites.push(article);
+      localStorage.setItem("favorites", JSON.stringify(favorites));
+      console.log("Article added to the fav");
+      toast.success("Article added to favorites!", {
+        position: "top-right",
+        autoClose: 4000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        style: { fontSize: "14px" }
+      });
+    }
   };
 
   return (
     <div className="container mx-auto lg:py-8 py-3">
-      {/* Header */}
-      <h1 className="lg:text-3xl text-xl font-bold text-center text-gray-800 mb-4">
-        Latest News
-      </h1>
-
-      {/* Category Selection */}
-      <CategoryFilter
-        categories={categoriesArray}
-        selectedCategory={selectedCategory}
-        onSelectCategory={handleCategoryClick}
+      {error ? (
+        <div className="text-center text-red-500 my-4">
+          <p className="text-lg font-semibold">Failed to fetch articles. Please try again later.</p>
+        </div>
+      ) : (
+        <>
+          <h1 className="lg:text-3xl text-xl font-bold text-center text-gray-800 mb-4">
+            Latest News
+          </h1>
+  
+          {/* Category Selection */}
+          <CategoryFilter
+            categories={categoriesArray}
+            selectedCategory={selectedCategory}
+            onSelectCategory={handleCategoryClick}
+          />
+  
+          {/* Articles Grid */}
+          <ArticleGrid
+            articles={articles}
+            loading={loading}
+            currentArticles={currentArticles}
+            handleAddToFav={handleAddToFav}
+            shortDescription={shortDescription}
+          />
+  
+          {/* Pagination */}
+          {!loading && (
+            <PaginationBar onPageChange={handlePageChange} />
+          )}
+        </>
+      )}
+  
+      {/* Toast */}
+      <ToastContainer
+        position="top-right"
+        autoClose={4000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        style={{ fontSize: "14px" }}
       />
-
-      {/* Articles Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 lg:gap-8 mx-4">
-        {loading ? (
-          // Display loading while fetching data
-          <div className="flex items-center justify-center col-span-4">
-            <CircularProgress color="primary" />
-          </div>
-        ) : currentArticles.length === 0 ? (
-          <div className="col-span-4 text-center text-gray-600 py-8">
-            No articles found.
-          </div>
-        ) : (
-          currentArticles.map((article, index) => (
-            <Link key={index} to={`/article/${article.title}`}>
-
-            <div
-              key={index}
-              className="rounded-lg overflow-hidden shadow-lg bg-white my-3 transition-all duration-300 hover:shadow-2xl"
-            >
-              <img
-                  className="w-full h-48 object-cover transform transition-transform duration-300 hover:scale-105"
-                  src={article.urlToImage}
-                alt={article.title}
-              />
-              <div className="p-4">
-                <h2 className="text-md font-semibold text-gray-800 mb-2">
-                  {article.title}
-                </h2>
-                <p className="text-sm text-gray-700 mb-4">
-                  {shortDescription(article.description)}
-                </p>
-                <p className="text-gray-500 font-semibold mb-2">
-                  By {article.author || 'Unknown'}
-                </p>
-                <Link key={index} to={`/article/${article.title}`}
-                className='text-blue-700 font-semibold'>
-
-                  Read More
-                </Link>
-              </div>
-            </div>
-            </Link>
-          ))
-        )}
-      </div>
-
-      {/* Pagination */}
-      <PaginationBar onPageChange={handlePageChange} />
     </div>
   );
+  
+ 
 };
 
 export default Articles;

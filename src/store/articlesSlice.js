@@ -8,6 +8,7 @@ const initialState = {
     loading: false,
     error: null,
     searchQuery: "",
+    favorites: JSON.parse(localStorage.getItem("favorites")) || [],
 }
 
 const articlesSlice = createSlice({
@@ -33,7 +34,21 @@ const articlesSlice = createSlice({
         },
         setSearchQuery: (state, action) => {
             state.searchQuery = action.payload;
-        }
+        },
+        addToFavorites: (state, action) => {
+            const articleToAdd = action.payload;
+            const exists = state.favorites.some((article) => article.title === articleToAdd.title);
+            if (!exists) {
+                state.favorites.push(articleToAdd);
+                localStorage.setItem("favorites", JSON.stringify(state.favorites));
+            }
+        },
+        removeFromFavorites: (state, action) => {
+            const titleToRemove = action.payload;
+            state.favorites = state.favorites.filter(article => article.title !== titleToRemove);
+            localStorage.setItem("favorites", JSON.stringify(state.favorites));
+        },
+
         
     }
 
@@ -45,7 +60,9 @@ export const {
     setCurrentPage,
     setLoading,
     setError,
-    setSearchQuery
+    setSearchQuery,
+    addToFavorites,
+    removeFromFavorites
 } = articlesSlice.actions;
 
 export default articlesSlice.reducer;
