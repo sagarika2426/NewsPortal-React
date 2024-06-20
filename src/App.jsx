@@ -3,6 +3,7 @@ import './App.css'
 import Articles from './components/Articles'
 import DetailedArticle from "./components/DetailedArticle";
 import Favorites from "./components/Favorites";
+import FavArticleDetails from "./components/FavArtcleDetails";
 
 
 function App() {
@@ -13,6 +14,8 @@ function App() {
         <Route path="/favorites" element={<Favorites/>} />
 
         <Route path="/article/:title" element={<DetailedArticle/>} /> 
+        <Route path="/favorites/:title" element={<FavArticleDetails/>} /> 
+
 
     </Routes>
   );
