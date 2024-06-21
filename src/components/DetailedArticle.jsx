@@ -5,7 +5,7 @@ import { CircularProgress, IconButton } from "@mui/material";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { addToFavorites, removeFromFavorites } from "../store/articlesSlice";
-import { toast } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const DetailedArticle = () => {
@@ -173,6 +173,18 @@ const DetailedArticle = () => {
           </div>
         )}
       </div>
+      <ToastContainer
+        position="top-right"
+        autoClose={4000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        style={{ fontSize: "14px" }}
+      />
     </div>
   );
 };
