@@ -7,7 +7,7 @@ const Favorites = () => {
   const dispatch = useDispatch();
   const favorites = useSelector((state) => state.articles.favorites);
 
-
+// toast for removing artcle from favorites
   const handleRemoveFromFavorites = (article) => {
     dispatch(removeFromFavorites(article.title));
     toast.error('Article removed from favorites!', {

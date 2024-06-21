@@ -36,19 +36,11 @@ const Articles = () => {
     "Sports",
   ];
 
-  // useEffect(() => {
-  //   dispatch(setLoading(true));
-  //   setTimeout(() => {
-  //     dispatch(setArticles(data.articles.slice(0, 10)));
-  //     dispatch(setLoading(false));
-  //   }, 1000);
-  // }, [dispatch]);
-
   useEffect(() => {
     const fetchArticles = async () => {
       dispatch(setLoading(true));
       try {
-        // const API_KEY = import.meta.env.VITE_NEWS_API_KEY;
+        const API_KEY = import.meta.env.VITE_NEWS_API_KEY;
         let url = `https://news-portal-2x31.onrender.com/latest-news`;
         if (selectedCategory) {
           url += `?category=${selectedCategory.toLowerCase()}`;
