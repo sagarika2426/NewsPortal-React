@@ -49,7 +49,7 @@ const Articles = () => {
       dispatch(setLoading(true));
       try {
         // const API_KEY = import.meta.env.VITE_NEWS_API_KEY;
-        let url = `https://news-portal-2x31.onrender.com/latest-news`;
+        // let url = `https://news-portal-2x31.onrender.com/latest-news`;
         if (selectedCategory) {
           url += `?category=${selectedCategory.toLowerCase()}`;
         }
@@ -57,7 +57,7 @@ const Articles = () => {
         const fetchedArticles = response.data.articles.filter(
           (article) => article.urlToImage
         );
-        dispatch(setArticles(fetchedArticles.slice(0,6)));
+        dispatch(setArticles(fetchedArticles));
       } catch (error) {
         console.error("Error fetching articles:", error);
         dispatch(setError(error.message));
