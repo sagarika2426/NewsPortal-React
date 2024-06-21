@@ -1,7 +1,7 @@
 import { CircularProgress, IconButton } from "@mui/material";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { addToFavorites, removeFromFavorites } from "../store/articlesSlice";
 import { toast } from "react-toastify";
@@ -15,6 +15,7 @@ const ArticleGrid = ({
   isFavoritePage = false,
 }) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate()
   const favorites = useSelector((state) => state.articles.favorites);
 
   // Function to check if article is in favorites using Redux state
@@ -22,6 +23,11 @@ const ArticleGrid = ({
     return favorites.some((favArticle) => favArticle.title === article.title);
   };
 
+  const handleExploreLatestNews = () => {
+
+    navigate('/', { replace: true })
+        window.location.reload(); 
+  };
   // Function to handle adding to favorites
   const handleAddToFav = (article) => {
     if (!isArticleInFavorites(article)) {
@@ -66,7 +72,7 @@ const ArticleGrid = ({
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 lg:gap-8 mx-4">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 lg:gap-8 mx-4 md:gap-4">
       {loading ? (
         <div className="flex items-center justify-center col-span-4">
           <CircularProgress color="primary" />
@@ -75,9 +81,10 @@ const ArticleGrid = ({
         <div className="col-span-4 text-center text-gray-600 py-8">
          <img src={articlNotFound} className="items-center m-auto w-96"/>
          <p className="my-4">No Artcles Found!</p>
-         <Link to="/">
-         <button className="bg-blue-700 text-white px-2 py-1 rounded-md">Explore Latest News</button>
-         </Link>
+         
+         <button className="bg-blue-700 text-white px-2 py-1 rounded-md"
+         onClick={handleExploreLatestNews}>Explore Latest News</button>
+      
         </div>
       ) : (
         currentArticles.map((article, index) => (
