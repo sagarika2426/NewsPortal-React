@@ -1,5 +1,4 @@
-import React from "react";
-import { Button, CircularProgress, IconButton } from "@mui/material";
+import { CircularProgress, IconButton } from "@mui/material";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { Link } from "react-router-dom";
@@ -7,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { addToFavorites, removeFromFavorites } from "../store/articlesSlice";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import articlNotFound from "../assets/article-not-found.gif"
 
 const ArticleGrid = ({
   loading,
@@ -73,7 +73,11 @@ const ArticleGrid = ({
         </div>
       ) : currentArticles.length === 0 ? (
         <div className="col-span-4 text-center text-gray-600 py-8">
-          No articles found.
+         <img src={articlNotFound} className="items-center m-auto w-96"/>
+         <p className="my-4">No Artcles Found!</p>
+         <Link to="/">
+         <button className="bg-blue-700 text-white px-2 py-1 rounded-md">Explore Latest News</button>
+         </Link>
         </div>
       ) : (
         currentArticles.map((article, index) => (
@@ -131,13 +135,19 @@ const ArticleGrid = ({
                 </button>
               ) : (
                 // Otherwise, show add to favorites button if not already in favorites
-                <IconButton onClick={() => handleAddToFav(article)}>
-                  {isArticleInFavorites(article) ? (
-                    <FavoriteIcon style={{ color: "red" }} />
-                  ) : (
-                    <FavoriteBorderIcon />
-                  )}
-                </IconButton>
+                <IconButton
+                onClick={() =>
+                  isArticleInFavorites(article)
+                    ? handleRemoveFromFav(article)
+                    : handleAddToFav(article)
+                }
+              >
+                {isArticleInFavorites(article) ? (
+                  <FavoriteIcon style={{ color: "red" }} />
+                ) : (
+                  <FavoriteBorderIcon />
+                )}
+              </IconButton>
               )}
             </div>
           </div>

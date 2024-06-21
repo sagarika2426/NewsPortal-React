@@ -48,16 +48,16 @@ const Articles = () => {
     const fetchArticles = async () => {
       dispatch(setLoading(true));
       try {
-        const API_KEY = import.meta.env.VITE_NEWS_API_KEY;
-        let url = `https://newsapi.org/v2/top-headlines?country=in&apiKey=${API_KEY}`;
+        // const API_KEY = import.meta.env.VITE_NEWS_API_KEY;
+        // let url = `https://news-portal-2x31.onrender.com/latest-news`;
         if (selectedCategory) {
-          url += `&category=${selectedCategory.toLowerCase()}`;
+          url += `?category=${selectedCategory.toLowerCase()}`;
         }
         const response = await axios.get(url);
         const fetchedArticles = response.data.articles.filter(
           (article) => article.urlToImage
         );
-        dispatch(setArticles(fetchedArticles.slice(0,0)));
+        dispatch(setArticles(fetchedArticles.slice(0,6)));
       } catch (error) {
         console.error("Error fetching articles:", error);
         dispatch(setError(error.message));

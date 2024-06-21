@@ -19,7 +19,7 @@ const NavBar = () => {
     <nav className="bg-gradient-to-b from-sky-700 to-sky-600 px-4 lg:py-6 py-4 sticky top-0 z-10 lg:px-6">
       <div className="mx-auto flex justify-between lg:items-center flex-col lg:flex-row">
         {/* Logo */}
-        <Link to="/" className="lg:text-2xl text-xl font-bold flex items-center gap-2 text-white">
+        <Link to="/" className="lg:text-3xl text-xl font-bold flex items-center gap-2 text-white">
           <span className='text-yellow-400'>News</span>
           <span className='text-white'>Portal</span>
         </Link>
