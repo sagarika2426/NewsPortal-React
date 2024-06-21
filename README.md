@@ -27,14 +27,19 @@ A responsive news portal application built with React, allowing users to browse,
 
 #### 1. Clone the repository:
    git clone https://github.com/yourusername/news-portal-frontend.git
+
 #### 2. Navigate to the project directory:
 cd news-portal-frontend
+
 #### 3. Install dependencies:
 npm install
+
 #### 4. Start the development server:
 npm start
+
 #### 5. Backend Setup
 The backend server is created using Express.js to handle CORS issues with direct API calls to the NewsAPI. Ensure the backend server is running before starting the frontend application.
+https://github.com/sagarika2426/NewsPortal-Backend
 
 
 ### Hosting 
