@@ -26,7 +26,7 @@ A responsive news portal application built with React, allowing users to browse,
 ### Installation
 
 #### 1. Clone the repository:
-   git clone https://github.com/yourusername/news-portal-frontend.git
+   git clone https://github.com/sagarika2426/NewsPortal-React.git
 
 #### 2. Navigate to the project directory:
 cd news-portal-frontend
